@@ -1,5 +1,6 @@
 const socket = io();
 
+const connectionBanner = document.querySelector('#connection-banner');
 const loginPanel = document.querySelector('#login-panel');
 const scoreboard = document.querySelector('#scoreboard');
 const loginForm = document.querySelector('#login-form');
@@ -18,12 +19,20 @@ const voteUrlEl = document.querySelector('#vote-url');
 const startButton = document.querySelector('#start-button');
 const stopButton = document.querySelector('#stop-button');
 const endButton = document.querySelector('#end-button');
+const backupButton = document.querySelector('#backup-button');
 const resetButton = document.querySelector('#reset-button');
 const ideaCountInput = document.querySelector('#idea-count');
 const setupButton = setupForm.querySelector('button[type="submit"]');
 const VOTE_DURATION_MS = 20_000;
 
 let lastState = null;
+
+function setConnectionStatus(isConnected) {
+  connectionBanner.classList.toggle('hidden', isConnected);
+  if (!isConnected) {
+    connectionBanner.textContent = 'Connection paused. Keep this page open; it reconnects automatically.';
+  }
+}
 
 function openQrFullscreen() {
   qrFullscreen.classList.add('is-open');
@@ -65,6 +74,38 @@ function renderStars(average, className = 'reveal-stars') {
       })
       .join('')}
   </div>`;
+}
+
+function buildBackupPayload(state) {
+  return {
+    savedAt: new Date().toISOString(),
+    app: 'Idea Pitch Ratings',
+    phase: state.phase,
+    ideaCount: state.ideaCount,
+    currentIdea: state.currentIdea,
+    results: state.results,
+    topTen: state.topTen
+  };
+}
+
+function downloadBackup() {
+  adminError.textContent = '';
+  if (!lastState) {
+    adminError.textContent = 'No ratings to back up yet';
+    return;
+  }
+
+  const backup = buildBackupPayload(lastState);
+  const blob = new Blob([`${JSON.stringify(backup, null, 2)}\n`], { type: 'application/json' });
+  const link = document.createElement('a');
+  const timestamp = backup.savedAt.replace(/[:.]/g, '-');
+  const objectUrl = URL.createObjectURL(blob);
+  link.href = objectUrl;
+  link.download = `idea-pitch-ratings-backup-${timestamp}.json`;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
 }
 
 function renderSetup(state) {
@@ -231,6 +272,7 @@ setupForm.addEventListener('submit', (event) => {
 startButton.addEventListener('click', () => emitCommand('idea:start'));
 stopButton.addEventListener('click', () => emitCommand('idea:stop'));
 endButton.addEventListener('click', () => emitCommand('session:end'));
+backupButton.addEventListener('click', downloadBackup);
 resetButton.addEventListener('click', () => emitCommand('session:reset'));
 qrOpenButton.addEventListener('click', openQrFullscreen);
 qrCloseButton.addEventListener('click', closeQrFullscreen);
@@ -246,7 +288,9 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+socket.on('connect', () => setConnectionStatus(true));
+socket.on('disconnect', () => setConnectionStatus(false));
 socket.on('session:state', render);
 socket.on('connect_error', () => {
-  adminError.textContent = 'Connection lost. Refresh if it does not reconnect.';
+  setConnectionStatus(false);
 });

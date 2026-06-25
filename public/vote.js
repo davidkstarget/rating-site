@@ -1,5 +1,6 @@
 const socket = io();
 
+const connectionBanner = document.querySelector('#connection-banner');
 const emailPanel = document.querySelector('#email-panel');
 const votePanel = document.querySelector('#vote-panel');
 const emailForm = document.querySelector('#email-form');
@@ -13,6 +14,13 @@ const voteMessage = document.querySelector('#vote-message');
 let registeredEmail = window.localStorage.getItem('ratingSiteEmail') || '';
 let currentIdeaNumber = null;
 let selectedRating = null;
+
+function setConnectionStatus(isConnected) {
+  connectionBanner.classList.toggle('hidden', isConnected);
+  if (!isConnected) {
+    connectionBanner.textContent = 'Connection paused. Keep this page open; it reconnects automatically.';
+  }
+}
 
 function setStars(rating) {
   selectedRating = rating;
@@ -106,8 +114,11 @@ starButtons.forEach((button) => {
 
 socket.on('session:state', renderState);
 socket.on('connect', () => {
+  setConnectionStatus(true);
   if (registeredEmail) {
     emailInput.value = registeredEmail;
     registerEmail(registeredEmail);
   }
 });
+socket.on('disconnect', () => setConnectionStatus(false));
+socket.on('connect_error', () => setConnectionStatus(false));

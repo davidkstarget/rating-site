@@ -34,6 +34,14 @@ Default local PIN from `.env.example` is `2468`. Change `ADMIN_PIN` in `.env` be
 - Rankings sort by average rating, then vote count, then lower idea number.
 - Data is stored in memory and is cleared when the server restarts or the admin resets the session.
 
+## Reliability Notes
+
+- If a student briefly loses internet, their phone will reconnect automatically. If they already voted for the current idea, that vote stays on the server.
+- If the teacher laptop briefly loses internet, voting continues on Render and the admin screen catches up after reconnecting.
+- If Render restarts or the service is redeployed during class, the in-memory session is reset. Use the admin "Download backup" button during class to save the aggregate scores collected so far.
+- The backup file contains idea numbers, vote counts, averages, and the top 10. It does not contain student emails.
+- Before class, open the Render URL once, keep the admin page open, and download a backup every few ideas.
+
 ## Render Deployment
 
 This repo includes `render.yaml` for a single free Node web service.

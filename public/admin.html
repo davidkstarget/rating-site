@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body class="admin-page">
+    <div id="connection-banner" class="connection-banner hidden" role="status" aria-live="assertive">
+      Connection paused. Keep this page open; it reconnects automatically.
+    </div>
     <main class="admin-shell">
       <section id="login-panel" class="login-panel">
         <div>
@@ -61,7 +64,8 @@
               <button id="start-button" type="button">Open voting for Idea 1</button>
               <button id="stop-button" type="button" class="secondary">Close voting</button>
               <button id="end-button" type="button" class="secondary">Show final top 10</button>
-              <button id="reset-button" type="button" class="ghost">Start over</button>
+              <button id="backup-button" type="button" class="ghost">Download backup</button>
+              <button id="reset-button" type="button" class="ghost wide-control">Start over</button>
             </div>
             <p id="admin-error" class="error-text" role="alert"></p>
           </aside>
