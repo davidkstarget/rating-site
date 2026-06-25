@@ -3,18 +3,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Vote for Ideas</title>
+    <title>Rate this idea</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body class="vote-page">
     <main class="phone-shell">
       <header class="phone-header">
-        <p class="eyebrow">RUNI idea ratings</p>
-        <h1>Cast your vote</h1>
+        <p class="eyebrow">Idea Pitch Ratings</p>
+        <h1>Rate this idea</h1>
       </header>
 
       <section id="email-panel" class="phone-panel">
         <form id="email-form">
+          <h2>Join the vote</h2>
           <label for="student-email">RUNI email</label>
           <input
             id="student-email"
@@ -24,13 +25,13 @@
             autocomplete="email"
             required
           />
-          <button type="submit">Continue</button>
+          <button type="submit">Join</button>
         </form>
         <p id="email-error" class="error-text" role="alert"></p>
       </section>
 
       <section id="vote-panel" class="phone-panel hidden" aria-live="polite">
-        <p id="student-status" class="student-status">Waiting for the next idea</p>
+        <p id="student-status" class="student-status">Waiting for the teacher</p>
         <h2 id="student-idea">Idea</h2>
         <div id="star-buttons" class="star-buttons" role="radiogroup" aria-label="Rating from 1 to 5 stars">
           <button type="button" data-rating="1" aria-label="1 star">★</button>

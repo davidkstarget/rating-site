@@ -68,25 +68,25 @@ function renderStars(average, className = 'reveal-stars') {
 }
 
 function renderSetup(state) {
-  const configuredText = state.ideaCount ? `${state.ideaCount} ideas` : 'Not configured';
+  const configuredText = state.ideaCount ? `${state.ideaCount} presenters` : 'Set up class';
   sessionChip.textContent = configuredText;
   stageContent.innerHTML = `
     <div class="empty-stage">
-      <p class="eyebrow">Ready when you are</p>
-      <h2>Set the class size, then start Idea 1.</h2>
-      <p class="stage-copy">The same number is used for students, ideas, and votes needed to close early.</p>
+      <p class="eyebrow">Welcome</p>
+      <h2>Let the ideas begin.</h2>
+      <p class="stage-copy">Choose how many presenters are here today. Students can scan the QR and get ready to rate.</p>
     </div>
   `;
 }
 
 function renderReady(state) {
-  sessionChip.textContent = `${state.ideaCount} ideas`;
+  sessionChip.textContent = `${state.ideaCount} presenters`;
   const nextIdea = state.results.length + 1;
   stageContent.innerHTML = `
     <div class="empty-stage">
-      <p class="eyebrow">Next up</p>
+      <p class="eyebrow">Next presenter</p>
       <h2>Idea ${nextIdea}</h2>
-      <p class="stage-copy">Start voting when the student finishes presenting.</p>
+      <p class="stage-copy">When the pitch is finished, open voting for the class.</p>
     </div>
   `;
 }
@@ -95,13 +95,13 @@ function renderVoting(state) {
   const idea = state.currentIdea;
   const remainingSeconds = Math.ceil((idea?.remainingMs || 0) / 1000);
   const progress = Math.max(0, Math.min(1, (idea?.remainingMs || 0) / 10_000));
-  sessionChip.textContent = `Voting: Idea ${idea.ideaNumber}`;
+  sessionChip.textContent = `Voting open: Idea ${idea.ideaNumber}`;
   stageContent.innerHTML = `
     <div class="voting-stage">
       <div class="idea-stack">
-        <p class="eyebrow">Now voting</p>
+        <p class="eyebrow">Voting is open</p>
         <h2>Idea ${idea.ideaNumber}</h2>
-        <p class="vote-count">${idea.voteCount} / ${state.ideaCount} voted</p>
+        <p class="vote-count">${idea.voteCount} of ${state.ideaCount} ratings in</p>
       </div>
       <div class="countdown" style="--progress:${progress}">
         <span>${remainingSeconds}</span>
@@ -112,21 +112,21 @@ function renderVoting(state) {
 
 function renderReveal(state) {
   const idea = state.currentIdea;
-  sessionChip.textContent = `Result: Idea ${idea.ideaNumber}`;
+  sessionChip.textContent = `Score: Idea ${idea.ideaNumber}`;
   stageContent.innerHTML = `
     <div class="reveal-stage">
       <div class="burst" aria-hidden="true"></div>
-      <p class="eyebrow">Average rating</p>
+      <p class="eyebrow">Class rating</p>
       <h2>Idea ${idea.ideaNumber}</h2>
       ${renderStars(idea.average)}
       <div class="score-number">${formatAverage(idea.average)} <span>/ 5</span></div>
-      <p class="vote-count">${idea.voteCount} votes counted</p>
+      <p class="vote-count">${idea.voteCount} students rated this idea</p>
     </div>
   `;
 }
 
 function renderEnded(state) {
-  sessionChip.textContent = 'Final leaderboard';
+  sessionChip.textContent = 'Final top 10';
   const rows = state.topTen
     .map(
       (result, index) => `
@@ -142,16 +142,16 @@ function renderEnded(state) {
 
   stageContent.innerHTML = `
     <div class="leaderboard-stage">
-      <p class="eyebrow">Top 10</p>
-      <h2>Final Results</h2>
-      <ol class="leaderboard">${rows || '<li>No results yet</li>'}</ol>
+      <p class="eyebrow">Class favorites</p>
+      <h2>Top 10 ideas</h2>
+      <ol class="leaderboard">${rows || '<li>No scores yet</li>'}</ol>
     </div>
   `;
 }
 
 function renderResults(state) {
   if (!state.results.length) {
-    resultStrip.innerHTML = '<span class="muted">No completed ideas yet</span>';
+    resultStrip.innerHTML = '<span class="muted">Scores will appear here after each idea</span>';
     return;
   }
 

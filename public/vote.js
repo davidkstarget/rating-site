@@ -59,10 +59,10 @@ function renderVoting(state) {
 function renderWaiting(state) {
   const label =
     state.phase === 'reveal'
-      ? 'Vote closed. Watch the projected result.'
+      ? 'Voting closed. Watch the big screen.'
       : state.phase === 'ended'
-        ? 'Session ended. Watch the final leaderboard.'
-        : 'Waiting for the next idea.';
+        ? 'The final top 10 is on the big screen.'
+        : 'Waiting for the teacher to open voting.';
 
   studentIdea.textContent = state.phase === 'setup' ? 'Not started' : 'Ready';
   studentStatus.textContent = label;
@@ -99,7 +99,7 @@ starButtons.forEach((button) => {
         return;
       }
 
-      voteMessage.textContent = 'Vote received';
+      voteMessage.textContent = 'Thanks, your rating is in';
     });
   });
 });

@@ -348,6 +348,13 @@ label {
   overflow-wrap: anywhere;
 }
 
+.qr-note {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+  margin: -0.15rem 0 0.35rem;
+}
+
 .qr-fullscreen {
   align-items: center;
   background: rgba(255, 250, 240, 0.96);
@@ -509,6 +516,12 @@ label {
 .phone-panel form {
   display: grid;
   gap: 0.8rem;
+}
+
+.phone-panel form h2 {
+  font-size: clamp(1.8rem, 8vw, 2.8rem);
+  line-height: 1;
+  margin: 0 0 0.2rem;
 }
 
 .phone-panel h2 {
