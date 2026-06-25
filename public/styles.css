@@ -420,36 +420,6 @@ label {
   grid-template-columns: 1fr 1fr;
 }
 
-.results-band {
-  background: rgba(255, 255, 255, 0.78);
-  border: 2px solid rgba(221, 227, 238, 0.9);
-  border-radius: 8px;
-  padding: 1rem;
-}
-
-.result-strip {
-  display: flex;
-  gap: 0.7rem;
-  overflow-x: auto;
-  padding-bottom: 0.25rem;
-}
-
-.result-pill {
-  align-items: center;
-  background: #ffffff;
-  border: 2px solid var(--line);
-  border-radius: 999px;
-  display: flex;
-  flex: 0 0 auto;
-  gap: 0.7rem;
-  padding: 0.55rem 0.85rem;
-}
-
-.result-pill strong {
-  color: var(--coral);
-  font-size: 1.3rem;
-}
-
 .leaderboard {
   display: grid;
   gap: 0.55rem;

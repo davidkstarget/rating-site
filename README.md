@@ -21,7 +21,7 @@ Default local PIN from `.env.example` is `2468`. Change `ADMIN_PIN` in `.env` be
 3. Set the number of students/ideas, from 1 to 40.
 4. Students scan the QR code and enter their `@post.runi.ac.il` email.
 5. Start each idea after the student finishes presenting.
-6. Voting closes after 10 seconds or when every expected student has voted.
+6. Voting closes after 20 seconds or when every expected student has voted.
 7. The projected screen reveals the average rating immediately.
 8. End the session to show the final top 10.
 

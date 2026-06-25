@@ -53,17 +53,17 @@ test('closes an idea early when unique votes reach ideaCount', () => {
   assert.equal(state.currentIdea.voteCount, 2);
 });
 
-test('closes an idea after ten seconds even without all votes', () => {
+test('closes an idea after twenty seconds even without all votes', () => {
   let currentTime = 1000;
   const store = new SessionStore({ now: () => currentTime });
   store.configure({ ideaCount: 3 });
   store.startNextIdea();
   store.submitVote({ email: 'one@post.runi.ac.il', rating: 3 });
 
-  currentTime = 10_999;
+  currentTime = 20_999;
   assert.equal(store.tick().phase, 'voting');
 
-  currentTime = 11_000;
+  currentTime = 21_000;
   const state = store.tick();
   assert.equal(state.phase, 'reveal');
   assert.equal(state.currentIdea.average, 3);

@@ -22,7 +22,11 @@ test('projected admin UI uses classroom-facing copy', () => {
     'Start next idea',
     'Stop voting',
     'End session',
-    'Reset'
+    'Reset',
+    'Scores so far',
+    'Scores will appear here after each idea',
+    'result-strip',
+    'results-band'
   ]) {
     assert.equal(copy.includes(phrase), false, `Unexpected internal-sounding phrase: ${phrase}`);
   }
@@ -31,11 +35,11 @@ test('projected admin UI uses classroom-facing copy', () => {
     'Idea Pitch Ratings',
     'Set up class',
     'Presenters today',
-    'Open voting',
+    'Open voting for Idea',
+    'Voting open for Idea',
     'Close voting',
     'Show final top 10',
     'Start over',
-    'Scores so far',
     'Scan to vote',
     'Tap QR to enlarge'
   ]) {

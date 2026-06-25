@@ -8,7 +8,6 @@ const setupForm = document.querySelector('#setup-form');
 const adminError = document.querySelector('#admin-error');
 const sessionChip = document.querySelector('#session-chip');
 const stageContent = document.querySelector('#stage-content');
-const resultStrip = document.querySelector('#result-strip');
 const qrCode = document.querySelector('#qr-code');
 const qrCodeLarge = document.querySelector('#qr-code-large');
 const qrOpenButton = document.querySelector('#qr-open-button');
@@ -22,6 +21,7 @@ const endButton = document.querySelector('#end-button');
 const resetButton = document.querySelector('#reset-button');
 const ideaCountInput = document.querySelector('#idea-count');
 const setupButton = setupForm.querySelector('button[type="submit"]');
+const VOTE_DURATION_MS = 20_000;
 
 let lastState = null;
 
@@ -94,7 +94,7 @@ function renderReady(state) {
 function renderVoting(state) {
   const idea = state.currentIdea;
   const remainingSeconds = Math.ceil((idea?.remainingMs || 0) / 1000);
-  const progress = Math.max(0, Math.min(1, (idea?.remainingMs || 0) / 10_000));
+  const progress = Math.max(0, Math.min(1, (idea?.remainingMs || 0) / VOTE_DURATION_MS));
   sessionChip.textContent = `Voting open: Idea ${idea.ideaNumber}`;
   stageContent.innerHTML = `
     <div class="voting-stage">
@@ -149,33 +149,27 @@ function renderEnded(state) {
   `;
 }
 
-function renderResults(state) {
-  if (!state.results.length) {
-    resultStrip.innerHTML = '<span class="muted">Scores will appear here after each idea</span>';
-    return;
-  }
-
-  resultStrip.innerHTML = state.results
-    .map(
-      (result) => `
-        <div class="result-pill">
-          <span>Idea ${result.ideaNumber}</span>
-          <strong>${formatAverage(result.average)}</strong>
-        </div>
-      `
-    )
-    .join('');
-}
-
 function setControlState(state) {
   const configured = Boolean(state.ideaCount);
   const setupLocked = !['setup', 'ready'].includes(state.phase);
   const voting = state.phase === 'voting';
   const ended = state.phase === 'ended';
-  const allStarted = configured && state.currentIdea?.ideaNumber >= state.ideaCount && state.phase !== 'ready';
+  const lastStartedIdea = state.currentIdea?.ideaNumber || state.results.length || 0;
+  const nextIdeaNumber = lastStartedIdea + 1;
+  const allStarted = configured && nextIdeaNumber > state.ideaCount;
 
   if (configured && document.activeElement !== ideaCountInput) {
     ideaCountInput.value = state.ideaCount;
+  }
+
+  if (voting && state.currentIdea) {
+    startButton.textContent = `Voting open for Idea ${state.currentIdea.ideaNumber}`;
+  } else if (!configured) {
+    startButton.textContent = 'Open voting for Idea 1';
+  } else if (allStarted) {
+    startButton.textContent = 'All ideas rated';
+  } else {
+    startButton.textContent = `Open voting for Idea ${nextIdeaNumber}`;
   }
 
   setupForm.classList.toggle('is-disabled', setupLocked);
@@ -195,7 +189,6 @@ function render(state) {
   qrFullscreenUrl.textContent = voteUrl;
   qrCode.src = qrSrc;
   qrCodeLarge.src = qrSrc;
-  renderResults(state);
   setControlState(state);
 
   if (state.phase === 'setup') {
