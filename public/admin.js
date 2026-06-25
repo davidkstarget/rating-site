@@ -10,6 +10,11 @@ const sessionChip = document.querySelector('#session-chip');
 const stageContent = document.querySelector('#stage-content');
 const resultStrip = document.querySelector('#result-strip');
 const qrCode = document.querySelector('#qr-code');
+const qrCodeLarge = document.querySelector('#qr-code-large');
+const qrOpenButton = document.querySelector('#qr-open-button');
+const qrFullscreen = document.querySelector('#qr-fullscreen');
+const qrFullscreenUrl = document.querySelector('#qr-fullscreen-url');
+const qrCloseButton = document.querySelector('#qr-close-button');
 const voteUrlEl = document.querySelector('#vote-url');
 const startButton = document.querySelector('#start-button');
 const stopButton = document.querySelector('#stop-button');
@@ -19,6 +24,18 @@ const ideaCountInput = document.querySelector('#idea-count');
 const setupButton = setupForm.querySelector('button[type="submit"]');
 
 let lastState = null;
+
+function openQrFullscreen() {
+  qrFullscreen.classList.add('is-open');
+  qrFullscreen.setAttribute('aria-hidden', 'false');
+  qrCloseButton.focus();
+}
+
+function closeQrFullscreen() {
+  qrFullscreen.classList.remove('is-open');
+  qrFullscreen.setAttribute('aria-hidden', 'true');
+  qrOpenButton.focus();
+}
 
 function emitCommand(event, payload = {}) {
   adminError.textContent = '';
@@ -173,8 +190,11 @@ function setControlState(state) {
 function render(state) {
   lastState = state;
   const voteUrl = voteUrlFromState(state);
+  const qrSrc = `/qr.svg?url=${encodeURIComponent(voteUrl)}`;
   voteUrlEl.textContent = voteUrl;
-  qrCode.src = `/qr.svg?url=${encodeURIComponent(voteUrl)}`;
+  qrFullscreenUrl.textContent = voteUrl;
+  qrCode.src = qrSrc;
+  qrCodeLarge.src = qrSrc;
   renderResults(state);
   setControlState(state);
 
@@ -219,6 +239,19 @@ startButton.addEventListener('click', () => emitCommand('idea:start'));
 stopButton.addEventListener('click', () => emitCommand('idea:stop'));
 endButton.addEventListener('click', () => emitCommand('session:end'));
 resetButton.addEventListener('click', () => emitCommand('session:reset'));
+qrOpenButton.addEventListener('click', openQrFullscreen);
+qrCloseButton.addEventListener('click', closeQrFullscreen);
+qrFullscreen.addEventListener('click', (event) => {
+  if (event.target === qrFullscreen) {
+    closeQrFullscreen();
+  }
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && qrFullscreen.classList.contains('is-open')) {
+    closeQrFullscreen();
+  }
+});
 
 socket.on('session:state', render);
 socket.on('connect_error', () => {

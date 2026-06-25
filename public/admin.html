@@ -39,7 +39,9 @@
 
           <aside class="side-panel">
             <div class="qr-wrap">
-              <img id="qr-code" alt="QR code for student voting" />
+              <button id="qr-open-button" class="qr-button" type="button" aria-label="Open QR code fullscreen">
+                <img id="qr-code" alt="QR code for student voting" />
+              </button>
               <div>
                 <p class="eyebrow">Student link</p>
                 <p id="vote-url" class="vote-url"></p>
@@ -72,6 +74,14 @@
         </section>
       </section>
     </main>
+
+    <div id="qr-fullscreen" class="qr-fullscreen" aria-hidden="true">
+      <button id="qr-close-button" class="qr-close-button" type="button">Close</button>
+      <div class="qr-fullscreen-card">
+        <img id="qr-code-large" alt="Large QR code for student voting" />
+        <p id="qr-fullscreen-url" class="qr-fullscreen-url"></p>
+      </div>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/admin.js"></script>
