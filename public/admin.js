@@ -26,6 +26,7 @@ const setupButton = setupForm.querySelector('button[type="submit"]');
 const VOTE_DURATION_MS = 20_000;
 
 let lastState = null;
+let adminPin = '';
 
 function setConnectionStatus(isConnected) {
   connectionBanner.classList.toggle('hidden', isConnected);
@@ -52,6 +53,33 @@ function emitCommand(event, payload = {}) {
     if (!response?.ok) {
       adminError.textContent = response?.error || 'Command failed';
     }
+  });
+}
+
+function showLoggedInAdmin() {
+  loginPanel.classList.add('hidden');
+  scoreboard.classList.remove('hidden');
+  if (lastState) {
+    render(lastState);
+  }
+}
+
+function loginAdmin(pin, { showLoginError = true } = {}) {
+  socket.emit('admin:login', { pin }, (response) => {
+    if (!response?.ok) {
+      if (showLoginError) {
+        loginError.textContent = response?.error || 'Login failed';
+      } else {
+        adminPin = '';
+        adminError.textContent = 'Enter the admin PIN again to continue.';
+        loginPanel.classList.remove('hidden');
+        scoreboard.classList.add('hidden');
+      }
+      return;
+    }
+
+    adminPin = pin;
+    showLoggedInAdmin();
   });
 }
 
@@ -248,19 +276,8 @@ function render(state) {
 loginForm.addEventListener('submit', (event) => {
   event.preventDefault();
   loginError.textContent = '';
-  const pin = new FormData(loginForm).get('pin');
-  socket.emit('admin:login', { pin }, (response) => {
-    if (!response?.ok) {
-      loginError.textContent = response?.error || 'Login failed';
-      return;
-    }
-
-    loginPanel.classList.add('hidden');
-    scoreboard.classList.remove('hidden');
-    if (lastState) {
-      render(lastState);
-    }
-  });
+  const pin = String(new FormData(loginForm).get('pin') || '');
+  loginAdmin(pin);
 });
 
 setupForm.addEventListener('submit', (event) => {
@@ -288,7 +305,12 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-socket.on('connect', () => setConnectionStatus(true));
+socket.on('connect', () => {
+  setConnectionStatus(true);
+  if (adminPin) {
+    loginAdmin(adminPin, { showLoginError: false });
+  }
+});
 socket.on('disconnect', () => setConnectionStatus(false));
 socket.on('session:state', render);
 socket.on('connect_error', () => {

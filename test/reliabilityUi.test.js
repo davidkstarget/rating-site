@@ -17,6 +17,9 @@ test('admin UI exposes connection status and backup download controls', () => {
   assert.match(js, /socket\.on\('connect'/);
   assert.match(js, /function downloadBackup/);
   assert.match(js, /application\/json/);
+  assert.match(js, /let adminPin = ''/);
+  assert.match(js, /function loginAdmin/);
+  assert.match(js, /if \(adminPin\)/);
 });
 
 test('student UI warns voters when the live connection is interrupted', () => {
