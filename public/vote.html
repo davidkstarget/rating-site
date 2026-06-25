@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vote for Ideas</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="vote-page">
+    <main class="phone-shell">
+      <header class="phone-header">
+        <p class="eyebrow">RUNI idea ratings</p>
+        <h1>Cast your vote</h1>
+      </header>
+
+      <section id="email-panel" class="phone-panel">
+        <form id="email-form">
+          <label for="student-email">RUNI email</label>
+          <input
+            id="student-email"
+            name="email"
+            type="email"
+            placeholder="name@post.runi.ac.il"
+            autocomplete="email"
+            required
+          />
+          <button type="submit">Continue</button>
+        </form>
+        <p id="email-error" class="error-text" role="alert"></p>
+      </section>
+
+      <section id="vote-panel" class="phone-panel hidden" aria-live="polite">
+        <p id="student-status" class="student-status">Waiting for the next idea</p>
+        <h2 id="student-idea">Idea</h2>
+        <div id="star-buttons" class="star-buttons" role="radiogroup" aria-label="Rating from 1 to 5 stars">
+          <button type="button" data-rating="1" aria-label="1 star">★</button>
+          <button type="button" data-rating="2" aria-label="2 stars">★</button>
+          <button type="button" data-rating="3" aria-label="3 stars">★</button>
+          <button type="button" data-rating="4" aria-label="4 stars">★</button>
+          <button type="button" data-rating="5" aria-label="5 stars">★</button>
+        </div>
+        <p id="vote-message" class="vote-message"></p>
+      </section>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/vote.js"></script>
+  </body>
+</html>

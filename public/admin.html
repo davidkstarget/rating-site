@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Classroom Idea Ratings</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="admin-page">
+    <main class="admin-shell">
+      <section id="login-panel" class="login-panel">
+        <div>
+          <p class="eyebrow">RUNI idea ratings</p>
+          <h1>Classroom Scoreboard</h1>
+        </div>
+        <form id="login-form" class="inline-form">
+          <label for="admin-pin">Admin PIN</label>
+          <div class="form-row">
+            <input id="admin-pin" name="pin" type="password" inputmode="numeric" autocomplete="current-password" required />
+            <button type="submit">Open</button>
+          </div>
+          <p id="login-error" class="error-text" role="alert"></p>
+        </form>
+      </section>
+
+      <section id="scoreboard" class="scoreboard hidden" aria-live="polite">
+        <header class="top-bar">
+          <div>
+            <p class="eyebrow">Live voting</p>
+            <h1>Classroom Scoreboard</h1>
+          </div>
+          <div class="session-chip" id="session-chip">Not configured</div>
+        </header>
+
+        <section class="stage-grid">
+          <article class="stage-panel" id="stage-panel">
+            <div id="stage-content"></div>
+          </article>
+
+          <aside class="side-panel">
+            <div class="qr-wrap">
+              <img id="qr-code" alt="QR code for student voting" />
+              <div>
+                <p class="eyebrow">Student link</p>
+                <p id="vote-url" class="vote-url"></p>
+              </div>
+            </div>
+
+            <form id="setup-form" class="setup-form">
+              <label for="idea-count">Students / ideas</label>
+              <div class="form-row">
+                <input id="idea-count" name="ideaCount" type="number" min="1" max="40" value="30" required />
+                <button type="submit">Set</button>
+              </div>
+            </form>
+
+            <div class="control-grid">
+              <button id="start-button" type="button">Start next idea</button>
+              <button id="stop-button" type="button" class="secondary">Stop voting</button>
+              <button id="end-button" type="button" class="secondary">End session</button>
+              <button id="reset-button" type="button" class="ghost">Reset</button>
+            </div>
+            <p id="admin-error" class="error-text" role="alert"></p>
+          </aside>
+        </section>
+
+        <section class="results-band">
+          <div>
+            <p class="eyebrow">Completed ideas</p>
+            <div id="result-strip" class="result-strip"></div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/admin.js"></script>
+  </body>
+</html>

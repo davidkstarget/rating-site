@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: classroom-rating-site
+    runtime: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 24.14.1
+      - key: ADMIN_PIN
+        sync: false
